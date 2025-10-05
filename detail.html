@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Tour Detail</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+      /* Internal styles for detail page (kept inside <head>) */
+      body { background: #f8f9fa; }
+      .detail-hero {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        padding: 80px 0;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .detail-hero .overlay {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background: rgba(0,0,0,0.35);
+      }
+      .detail-hero .container { position: relative; z-index: 2; }
+      .detail-price {
+        display: inline-block;
+        background: rgba(255,255,255,0.95);
+        color: #222;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-weight: 700;
+      }
+      .detail-location { color: rgba(255,255,255,0.9); margin-top: 6px; }
+
+      .detail-wrap { display: flex; gap: 30px; margin-top: 20px; align-items: flex-start; }
+      .detail-gallery { flex: 2; }
+      .detail-sidebar { flex: 1; background: #fff; padding: 20px; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+      .detail-gallery .thumb { height: 550px; background-size: contain; background-position: center; border-radius: 6px; margin-bottom: 12px; }
+      .detail-gallery .thumb + .thumb { margin-top: 10px; }
+
+      .price-row { display:flex; justify-content: space-between; align-items: center; font-size: 1.05rem; }
+      .detail-meta { display:flex; gap:12px; flex-wrap:wrap; color: #6c757d; }
+      .detail-meta .meta-item { display:flex; align-items:center; gap:6px; }
+
+      .detail-features { padding-left: 1rem; margin: 0.5rem 0; }
+      .detail-features li { list-style: disc; margin-left: 1rem; }
+
+      .detail-description h4 { margin-top: 0; }
+
+      .btn-book { display:inline-block; background:#007bff; color:#fff; padding:10px 16px; border-radius:4px; text-decoration:none; }
+
+      @media (max-width: 767.98px) {
+        .detail-hero { padding: 40px 0; }
+        .detail-wrap { flex-direction: column; }
+        .detail-gallery, .detail-sidebar { width: 100%; }
+        .detail-gallery .thumb { height: 180px; }
+      }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+  <a href="destination.html" class="btn btn-secondary mb-4">&larr; Back to Tours</a>
+
+  <!-- HERO (uses .detail-hero from css/style.css) -->
+  <section id="detail-hero" class="detail-hero mb-4">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <span class="detail-price" id="detail-price"></span>
+          <h1 id="detail-title" class="mt-2"></h1>
+          <p class="detail-location" id="detail-location"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN DETAIL (left = gallery, right = sidebar) -->
+  <div class="detail-wrap container" id="detail-wrap">
+    <div class="detail-gallery" id="detail-gallery">
+      <!-- thumbnails injected by JS -->
+    </div>
+
+    <aside class="detail-sidebar" id="detail-sidebar">
+      <!-- sidebar content injected by JS -->
+    </aside>
+  </div>
+
+  <div class="mt-4"><a href="index.html">Home</a></div>
+</div>
+
+<script>
+  // small dataset matching destination.html entries
+  const tours = {
+    1: {
+      title: 'Banaue Rice Terraces',
+      days: '8 Days',
+    //   price: '$550/person',
+      location: 'Banaue, Ifugao, Philippines',
+      features: ['2 Baths', '3 Beds', 'Mountain View'],
+      img: 'images/destination-1.jpg',
+      description: 'Explore the UNESCO-listed Banaue Rice Terraces and learn about the Ifugao culture. Guided treks, local homestays and panoramic viewpoints included.',
+      itinerary: [
+        'Day 1: Arrival and welcome dinner in Banaue',
+        'Day 2: Visit Batad viewpoint and local village',
+        'Day 3-7: Trekking, cultural exchanges and rest',
+        'Day 8: Return and departure'
+      ]
+    },
+    2: {
+      title: 'Palawan Island Escape',
+      days: '10 Days',
+    //   price: '$1,200/person',
+      location: 'El Nido & Coron, Palawan, Philippines',
+      features: ['Island Hopping', 'Snorkeling', 'White Sand Beaches'],
+      img: 'images/destination-2.jpg',
+      description: 'A relaxing island-hopping journey across Palawan with snorkeling at coral gardens, hidden lagoons, and beachfront stays.',
+      itinerary: [
+        'Day 1: Arrive in Puerto Princesa',
+        'Day 2-4: El Nido island hopping',
+        'Day 5-8: Coron dive and wreck tours',
+        'Day 9-10: Leisure and departure'
+      ]
+    },
+    3: {
+      title: 'Boracay Beach Getaway',
+      days: '7 Days',
+    //   price: '$850/person',
+      location: 'Boracay, Aklan, Philippines',
+      features: ['Water Sports', 'Nightlife', 'Fine Dining'],
+      img: 'images/destination-3.jpg',
+      description: 'Sun, sea and parties — enjoy Boracay’s world-famous White Beach with optional water sports and island tours.',
+      itinerary: [
+        'Day 1: Arrival and beachfront dinner',
+        'Day 2: Island hopping and snorkeling',
+        'Day 3: Parasailing and water sports',
+        'Day 4-7: Free time, spa, shopping and departure'
+      ]
+    },
+    4: {
+      title: 'Mayon Volcano Adventure',
+      days: '8 Days',
+    //   price: '$720/person',
+      location: 'Legazpi, Albay, Philippines',
+      features: ['Volcano Views', 'ATV Tours', 'Hiking'],
+      img: 'images/destination-4.jpg',
+      description: 'Experience the perfect cone of Mayon Volcano with guided hikes, ATV tours on the lava fields and local culinary tastings.',
+      itinerary: [
+        'Day 1: Arrival in Legazpi',
+        'Day 2: City tour and local food tasting',
+        'Day 3: ATV tour and sunrise viewpoint',
+        'Day 4-8: Optional hikes and cultural visits'
+      ]
+    },
+    5: {
+      title: 'Bohol Countryside & Panglao',
+      days: '10 Days',
+    //   price: '$980/person',
+      location: 'Bohol, Philippines',
+      features: ['Chocolate Hills', 'River Cruise', 'Dolphin Watching'],
+      img: 'images/destination-5.jpg',
+      description: 'See the Chocolate Hills, cruise the Loboc River, and relax on Panglao Island with snorkeling opportunities.',
+      itinerary: [
+        'Day 1: Arrival in Tagbilaran',
+        'Day 2: Chocolate Hills & Tarsier Sanctuary',
+        'Day 3: Loboc River cruise and island hopping',
+        'Day 4-10: Beach time and departures'
+      ]
+    },
+    6: {
+      title: 'Sagada Mountain Retreat',
+      days: '7 Days',
+    //   price: '$650/person',
+      location: 'Sagada, Mountain Province, Philippines',
+      features: ['Cave Exploration', 'Hanging Coffins', 'Trekking'],
+      img: 'images/destination-6.jpg',
+      description: 'A nature and culture itinerary into the Cordilleras: caves, rice terraces, hanging coffins and sunrise viewpoints.',
+      itinerary: [
+        'Day 1: Arrival in Baguio then to Sagada',
+        'Day 2: Sumaguing Cave and Lumiang Burial Cave',
+        'Day 3: Kiltepan sunrise and rice terrace hikes',
+        'Day 4-7: Cultural immersions and departure'
+      ]
+    },
+    7: {
+      title: 'Tubbataha Reef Liveaboard',
+      days: '7 Days',
+    //   price: '$1,800/person',
+      location: 'Tubbataha Reef, Sulu Sea, Philippines',
+      features: ['Scuba Diving', 'Marine Life', 'Liveaboard'],
+      img: 'images/destination-7.jpg',
+      description: 'A premium liveaboard diving experience at the UNESCO-listed Tubbataha Reef — for experienced divers seeking pristine reefs.',
+      itinerary: [
+        'Day 1: Embark in Puerto Princesa',
+        'Day 2-6: Multiple dives at Tubbataha reef sites',
+        'Day 7: Return and disembark'
+      ]
+    },
+    8: {
+      title: 'Siargao Surf & Island Hopping',
+      days: '7 Days',
+    //   price: '$900/person',
+      location: 'Siargao, Surigao del Norte, Philippines',
+      features: ['Surfing', 'Island Hopping', 'Cloud 9'],
+      img: 'images/destination-8.jpg',
+      description: 'Catch waves at Cloud 9, explore nearby islands and enjoy Siargao’s laid-back island vibe.',
+      itinerary: [
+        'Day 1: Arrival and surf orientation',
+        'Day 2-4: Surf lessons and Cloud 9',
+        'Day 5-7: Island hopping and relaxation'
+      ]
+    },
+    9: {
+      title: 'Vigan Heritage & Ilocos Tour',
+      days: '4 Days',
+    //   price: '$420/person',
+      location: 'Vigan, Ilocos Sur, Philippines',
+      features: ['Heritage City', 'Kalesa Ride', 'Local Cuisine'],
+      img: 'images/destination-9.jpg',
+      description: 'Step back in time in Vigan’s cobblestone streets, Spanish-era houses and enjoy local delicacies.',
+      itinerary: [
+        'Day 1: Arrival and Calle Crisologo walk',
+        'Day 2: Heritage sites and pottery tour',
+        'Day 3: Nearby Ilocos attractions',
+        'Day 4: Departure'
+      ]
+    }
+  };
+
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  const id = getQueryParam('id') || '1';
+  const tour = tours[id];
+
+  const heroEl = document.getElementById('detail-hero');
+  const priceEl = document.getElementById('detail-price');
+  const titleEl = document.getElementById('detail-title');
+  const locationEl = document.getElementById('detail-location');
+  const galleryEl = document.getElementById('detail-gallery');
+  const sidebarEl = document.getElementById('detail-sidebar');
+
+  if (!tour) {
+    sidebarEl.innerHTML = '<div class="alert alert-danger">Tour not found.</div>';
+    heroEl.style.backgroundImage = '';
+    titleEl.textContent = 'Tour not found';
+  } else {
+    // Hero background + basic info
+    heroEl.style.backgroundImage = `url(${tour.img})`;
+    priceEl.textContent = tour.price;
+    titleEl.textContent = tour.title;
+    locationEl.innerHTML = `<span class="fa fa-map-marker"></span> ${tour.location}`;
+
+    // Gallery (single image placeholder)
+    galleryEl.innerHTML = `
+      <div class="thumb" style="background-image: url(${tour.img});"></div>
+    `;
+
+    // Sidebar content
+    sidebarEl.innerHTML = `
+      <div class="price-row">
+        <div><strong>${tour.days}</strong></div>
+        <div class="text-muted">${tour.price}</div>
+      </div>
+
+      <div class="detail-meta mt-3">
+        <div class="meta-item"><span class="fa fa-clock-o"></span> ${tour.days}</div>
+        <div class="meta-item"><span class="fa fa-map-marker"></span> ${tour.location.split(',')[0]}</div>
+      </div>
+
+      <h5 class="mt-3">Features</h5>
+      <ul class="detail-features">
+        ${tour.features.map(f => `<li>${f}</li>`).join('')}
+      </ul>
+
+      <div class="detail-description">
+        <h4>Description</h4>
+        <p>${tour.description}</p>
+
+        <h4 class="mt-3">Itinerary</h4>
+        <ul>
+          ${tour.itinerary.map(day => `<li>${day}</li>`).join('')}
+        </ul>
+      </div>
+
+    `;
+  }
+</script>
+
+</body>
+</html>
