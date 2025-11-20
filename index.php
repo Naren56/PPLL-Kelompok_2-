@@ -69,7 +69,7 @@
 									<div class="col-md-12 heading-section ftco-animate">
 										<span class="subheading">About Us</span>
 										<h2 class="mb-4">Make Your Tour Memorable</h2>
-										<p style="text-align: justify;">Wisata Kabupaten Bangkalan hadir untuk memperkenalkan pesona alam, budaya, dan kearifan lokal yang dimiliki Bangkalan, Madura. Sebagai gerbang utama menuju Pulau Madura, Bangkalan menawarkan destinasi wisata yang unik, mulai dari keindahan pantai, wisata religi, kuliner khas, hingga warisan budaya yang masih terjaga.</p>
+										<p style="text-align: justify;">Wisata Kabupaten Bangkalan hadir untuk memperkenalkan pesona alam, budaya, dan kearifan lokal yang dimiliki Bangkalan, Madura. Sebagai gerbang utama menuju Pulau Madura, Bangkalan menawarkan destinasi wisata yang unik, mulai dari keindahan pantai, wisata religi, kuliner khas, hingga warisan budaya yang masih terjaga</p>
 										<p><a href="detail.php" class="btn btn-primary">Visit Your Destination</a></p>
 									</div>
 								</div>
